@@ -18,19 +18,19 @@ package org.axonframework.samples.trader.query.company.repositories;
 
 import org.axonframework.samples.trader.api.company.CompanyId;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.*;
+import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+
 /**
  * @author Jettro Coenradie
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({"classpath:META-INF/spring/persistence-infrastructure-context.xml",
-        "classpath:META-INF/spring/query-context.xml"})
+@ContextConfiguration("classpath:META-INF/spring/integration-test-context.xml")
 @ActiveProfiles("hsqldb")
 public class CompanyRepositoryIntegrationTest {
 

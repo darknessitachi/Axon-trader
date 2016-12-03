@@ -18,7 +18,7 @@ package org.axonframework.samples.trader.company.command;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.company.AddOrderBookToCompanyCommand;
 import org.axonframework.samples.trader.api.company.CompanyCreatedEvent;
 import org.axonframework.samples.trader.api.orders.trades.CreateOrderBookCommand;
@@ -45,11 +45,11 @@ public class CompanyOrderBookListener {
 
         OrderBookId orderBookId = new OrderBookId();
         CreateOrderBookCommand createOrderBookCommand = new CreateOrderBookCommand(orderBookId);
-        commandBus.dispatch(new GenericCommandMessage<CreateOrderBookCommand>(createOrderBookCommand));
+        commandBus.dispatch(new GenericCommandMessage<>(createOrderBookCommand));
 
         AddOrderBookToCompanyCommand addOrderBookToCompanyCommand =
                 new AddOrderBookToCompanyCommand(event.getCompanyIdentifier(), orderBookId);
-        commandBus.dispatch(new GenericCommandMessage<AddOrderBookToCompanyCommand>(addOrderBookToCompanyCommand));
+        commandBus.dispatch(new GenericCommandMessage<>(addOrderBookToCompanyCommand));
     }
 
     @Autowired

@@ -1,8 +1,9 @@
 package org.axonframework.samples.trader.webui.init;
 
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.eventstore.jdbc.EventSqlSchema;
-import org.axonframework.saga.repository.jdbc.SagaSqlSchema;
+import org.axonframework.eventhandling.saga.repository.jdbc.SagaSqlSchema;
+import org.axonframework.eventsourcing.eventstore.jdbc.EventSchema;
+import org.axonframework.eventsourcing.eventstore.jdbc.EventTableFactory;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.repositories.PortfolioQueryRepository;
@@ -15,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Set;
+import javax.sql.DataSource;
 
 /**
  * Initialisation of the Hsql datastore.
@@ -27,9 +28,11 @@ import java.util.Set;
 @Component
 @Profile("hsqldb")
 public class HsqlDBInit extends BaseDBInit {
+
     private final static Logger logger = LoggerFactory.getLogger(HsqlDBInit.class);
 
-    private EventSqlSchema eventSqlSchema;
+    private EventTableFactory eventTableFactory;
+    private EventSchema eventSchema;
     private SagaSqlSchema sagaSqlSchema;
     private DataSource dataSource;
     private UserQueryRepository userQueryRepository;
@@ -44,11 +47,17 @@ public class HsqlDBInit extends BaseDBInit {
                       CompanyQueryRepository companyRepository,
                       PortfolioQueryRepository portfolioRepository,
                       OrderBookQueryRepository orderBookRepository,
-                      EventSqlSchema eventSqlSchema,
+                      EventTableFactory eventTableFactory,
+                      EventSchema eventSchema,
                       SagaSqlSchema sagaSqlSchema, DataSource dataSource,
-                      UserQueryRepository userQueryRepository, CompanyQueryRepository companyQueryRepository, OrderBookQueryRepository orderBookQueryRepository, PortfolioQueryRepository portfolioQueryRepository, TradeExecutedQueryRepository tradeExecutedQueryRepository, TransactionQueryRepository transactionQueryRepository) {
+                      UserQueryRepository userQueryRepository, CompanyQueryRepository companyQueryRepository,
+                      OrderBookQueryRepository orderBookQueryRepository,
+                      PortfolioQueryRepository portfolioQueryRepository,
+                      TradeExecutedQueryRepository tradeExecutedQueryRepository,
+                      TransactionQueryRepository transactionQueryRepository) {
         super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
-        this.eventSqlSchema = eventSqlSchema;
+        this.eventTableFactory = eventTableFactory;
+        this.eventSchema = eventSchema;
         this.sagaSqlSchema = sagaSqlSchema;
         this.dataSource = dataSource;
         this.userQueryRepository = userQueryRepository;
@@ -80,8 +89,10 @@ public class HsqlDBInit extends BaseDBInit {
 
             connection.commit();
 
-            eventSqlSchema.sql_createDomainEventEntryTable(connection).execute();
-            eventSqlSchema.sql_createSnapshotEventEntryTable(connection).execute();
+            eventTableFactory.createDomainEventTable(connection, eventSchema)
+                             .execute();
+            eventTableFactory.createSnapshotEventTable(connection, eventSchema)
+                             .execute();
             sagaSqlSchema.sql_createTableSagaEntry(connection).execute();
             sagaSqlSchema.sql_createTableAssocValueEntry(connection).execute();
 
@@ -136,5 +147,4 @@ public class HsqlDBInit extends BaseDBInit {
     public PreparedStatement sql_dropTableSagaEntry(Connection conn) throws SQLException {
         return conn.prepareStatement("drop table SAGAENTRY if exists;");
     }
-
 }

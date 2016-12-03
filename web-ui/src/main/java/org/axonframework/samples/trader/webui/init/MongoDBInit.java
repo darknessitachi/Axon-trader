@@ -3,8 +3,8 @@ package org.axonframework.samples.trader.webui.init;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.axonframework.commandhandling.CommandBus;
-import org.axonframework.eventstore.mongo.MongoEventStore;
-import org.axonframework.saga.repository.mongo.MongoTemplate;
+import org.axonframework.mongo.eventsourcing.eventstore.MongoEventStorageEngine;
+import org.axonframework.mongo.eventsourcing.eventstore.MongoTemplate;
 import org.axonframework.samples.trader.query.company.CompanyEntry;
 import org.axonframework.samples.trader.query.company.repositories.CompanyQueryRepository;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
@@ -35,24 +35,24 @@ import java.util.Set;
 public class MongoDBInit extends BaseDBInit {
     private final static Logger logger = LoggerFactory.getLogger(MongoDBInit.class);
 
-    private org.axonframework.eventstore.mongo.MongoTemplate systemAxonMongo;
-    private MongoEventStore eventStore;
+    private MongoTemplate systemAxonMongo;
+    private MongoEventStorageEngine mongoEventStorageEngine;
     private org.springframework.data.mongodb.core.MongoTemplate mongoTemplate;
-    private MongoTemplate systemAxonSagaMongo;
+    private org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate systemAxonSagaMongo;
     private org.springframework.data.mongodb.core.MongoTemplate springTemplate;
 
     @Autowired
     public MongoDBInit(CommandBus commandBus,
                        CompanyQueryRepository companyRepository,
-                       org.axonframework.eventstore.mongo.MongoTemplate systemMongo,
-                       MongoEventStore eventStore,
+                       MongoTemplate systemMongo,
+                       MongoEventStorageEngine mongoEventStorageEngine,
                        org.springframework.data.mongodb.core.MongoTemplate mongoTemplate,
-                       MongoTemplate systemAxonSagaMongo,
+                       org.axonframework.mongo.eventhandling.saga.repository.MongoTemplate systemAxonSagaMongo,
                        PortfolioQueryRepository portfolioRepository,
                        OrderBookQueryRepository orderBookRepository, org.springframework.data.mongodb.core.MongoTemplate springTemplate) {
         super(commandBus, companyRepository, portfolioRepository, orderBookRepository);
         this.systemAxonMongo = systemMongo;
-        this.eventStore = eventStore;
+        this.mongoEventStorageEngine = mongoEventStorageEngine;
         this.mongoTemplate = mongoTemplate;
         this.systemAxonSagaMongo = systemAxonSagaMongo;
         this.springTemplate = springTemplate;
@@ -89,8 +89,8 @@ public class MongoDBInit extends BaseDBInit {
 
     @Override
     void initializeDB() {
-        systemAxonMongo.domainEventCollection().drop();
-        systemAxonMongo.snapshotEventCollection().drop();
+        systemAxonMongo.eventCollection().drop();
+        systemAxonMongo.snapshotCollection().drop();
 
         systemAxonSagaMongo.sagaCollection().drop();
 
@@ -105,6 +105,6 @@ public class MongoDBInit extends BaseDBInit {
 
     @Override
     void additionalDBSteps() {
-        eventStore.ensureIndexes();
+        mongoEventStorageEngine.ensureIndexes();
     }
 }

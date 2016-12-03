@@ -18,8 +18,8 @@ package org.axonframework.samples.trader.webui.security;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
 import org.axonframework.commandhandling.callbacks.FutureCallback;
+import org.axonframework.messaging.interceptors.JSR303ViolationException;
 import org.axonframework.samples.trader.api.users.AuthenticateUserCommand;
 import org.axonframework.samples.trader.api.users.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
     private final static Collection<GrantedAuthority> userAuthorities;
 
     static {
-        userAuthorities = new HashSet<GrantedAuthority>();
+        userAuthorities = new HashSet<>();
         userAuthorities.add(new GrantedAuthorityImpl("ROLE_USER"));
     }
 
@@ -68,13 +68,13 @@ public class TraderAuthenticationProvider implements AuthenticationProvider {
         UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
         String username = token.getName();
         String password = String.valueOf(token.getCredentials());
-        FutureCallback<UserAccount> accountCallback = new FutureCallback<UserAccount>();
+        FutureCallback<AuthenticateUserCommand, UserAccount> accountCallback = new FutureCallback<>();
         AuthenticateUserCommand command = new AuthenticateUserCommand(username, password.toCharArray());
         try {
-            commandBus.dispatch(new GenericCommandMessage<AuthenticateUserCommand>(command), accountCallback);
+            commandBus.dispatch(new GenericCommandMessage<>(command), accountCallback);
             // the bean validating interceptor is defined as a dispatch interceptor, meaning it is executed before
             // the command is dispatched.
-        } catch (StructuralCommandValidationFailedException e) {
+        } catch (JSR303ViolationException e) {
             return null;
         }
         UserAccount account;

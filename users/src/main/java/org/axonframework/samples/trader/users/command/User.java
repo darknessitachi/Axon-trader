@@ -16,24 +16,27 @@
 
 package org.axonframework.samples.trader.users.command;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateIdentifier;
+import org.axonframework.commandhandling.model.AggregateRoot;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.users.UserAuthenticatedEvent;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
 import org.axonframework.samples.trader.api.users.UserId;
 import org.axonframework.samples.trader.users.util.DigestUtils;
 
+import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
+
 /**
  * @author Jettro Coenradie
  */
-public class User extends AbstractAnnotatedAggregateRoot {
+@AggregateRoot
+public class User {
     private static final long serialVersionUID = 3291411359839192350L;
     @AggregateIdentifier
     private UserId userId;
     private String passwordHash;
 
-    protected User() {
+    public User() {
     }
 
     public User(UserId userId, String username, String name, String password) {
@@ -58,7 +61,6 @@ public class User extends AbstractAnnotatedAggregateRoot {
         return DigestUtils.sha1(String.valueOf(password));
     }
 
-    @Override
     public UserId getIdentifier() {
         return userId;
     }

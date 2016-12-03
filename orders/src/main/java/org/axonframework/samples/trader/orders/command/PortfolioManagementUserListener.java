@@ -18,7 +18,7 @@ package org.axonframework.samples.trader.orders.command;
 
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.samples.trader.api.portfolio.CreatePortfolioCommand;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 import org.axonframework.samples.trader.api.users.UserCreatedEvent;
@@ -43,7 +43,7 @@ public class PortfolioManagementUserListener {
         logger.debug("About to dispatch a new command to create a Portfolio for the new user {}",
                 event.getUserIdentifier());
         CreatePortfolioCommand command = new CreatePortfolioCommand(new PortfolioId(), event.getUserIdentifier());
-        commandBus.dispatch(new GenericCommandMessage<CreatePortfolioCommand>(command));
+        commandBus.dispatch(new GenericCommandMessage<>(command));
     }
 
     @Autowired

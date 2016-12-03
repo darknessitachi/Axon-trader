@@ -36,14 +36,13 @@
         </dependency>
         <dependency>
             <groupId>org.axonframework</groupId>
-            <artifactId>axon-mongo</artifactId>
+            <artifactId>axon-spring</artifactId>
             <version>${axon.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>${mongodb.java.version}</version>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-mongo</artifactId>
+            <version>${axon.version}</version>
         </dependency>
 
         <dependency>
@@ -70,11 +69,6 @@
             <version>${hibernate.javax.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>${xstream.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>

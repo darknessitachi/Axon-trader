@@ -19,7 +19,7 @@ package org.axonframework.samples.trader.webui.rest;
 import com.thoughtworks.xstream.XStream;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.GenericCommandMessage;
-import org.axonframework.commandhandling.StructuralCommandValidationFailedException;
+import org.axonframework.messaging.interceptors.JSR303ViolationException;
 import org.axonframework.samples.trader.query.orderbook.OrderBookEntry;
 import org.axonframework.samples.trader.query.orderbook.repositories.OrderBookQueryRepository;
 import org.axonframework.samples.trader.query.portfolio.PortfolioEntry;
@@ -71,8 +71,8 @@ public class RestController {
     String mappedCommand(String command, HttpServletResponse response) throws IOException {
         try {
             Object actualCommand = xStream.fromXML(command);
-            commandBus.dispatch(new GenericCommandMessage<Object>(actualCommand));
-        } catch (StructuralCommandValidationFailedException e) {
+            commandBus.dispatch(new GenericCommandMessage<>(actualCommand));
+        } catch (JSR303ViolationException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "This is an invalid request.");
         } catch (Exception e) {
             logger.error("Problem whils deserializing an xml: {}", command, e);
@@ -87,7 +87,7 @@ public class RestController {
     @ResponseBody
     String obtainPortfolios() {
         Iterable<PortfolioEntry> all = portfolioQueryRepository.findAll();
-        List<PortfolioEntry> portfolioEntries = new ArrayList<PortfolioEntry>();
+        List<PortfolioEntry> portfolioEntries = new ArrayList<>();
         for (PortfolioEntry entry : all) {
             portfolioEntries.add(entry);
         }
@@ -109,7 +109,7 @@ public class RestController {
     @ResponseBody
     String obtainOrderBooks() {
         Iterable<OrderBookEntry> all = orderBookQueryRepository.findAll();
-        List<OrderBookEntry> orderBookEntries = new ArrayList<OrderBookEntry>();
+        List<OrderBookEntry> orderBookEntries = new ArrayList<>();
         for (OrderBookEntry entry : all) {
             orderBookEntries.add(entry);
         }

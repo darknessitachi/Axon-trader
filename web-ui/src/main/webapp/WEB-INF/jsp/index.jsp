@@ -61,6 +61,18 @@
                 <td>buyer3</td>
                 <td>buyer3</td>
             </tr>
+            <tr>
+                <td>buyer4</td>
+                <td>buyer4</td>
+            </tr>
+            <tr>
+                <td>buyer5</td>
+                <td>buyer5</td>
+            </tr>
+            <tr>
+                <td>buyer6</td>
+                <td>buyer6</td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -74,7 +86,7 @@
     <div class="span5">
         <h2>Executed trades</h2>
 
-        <p>Trace all executed trades using the sockjs connection. Beware, vertx needs to be running as well.</p>
+        <p>Trace all executed trades using the sockjs connection.</p>
 
         <p><a class="btn primary" href="${ctx}/orderbook/socket">Executed trades &raquo;</a></p>
     </div>
