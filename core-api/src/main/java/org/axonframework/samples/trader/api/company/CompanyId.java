@@ -22,6 +22,7 @@ import org.axonframework.common.IdentifierFactory;
 import java.io.Serializable;
 
 /**
+ * 公司Id
  * @author Jettro Coenradie
  */
 public class CompanyId implements Serializable {

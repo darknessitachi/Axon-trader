@@ -39,4 +39,4 @@ public class OrderBookAddedToCompanyEvent {
     public OrderBookId getOrderBookId() {
         return orderBookId;
     }
-}
+} 

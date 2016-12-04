@@ -27,6 +27,7 @@ import org.axonframework.samples.trader.api.orders.trades.OrderBookId;
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
 /**
+ * 公司
  * @author Jettro Coenradie
  */
 @AggregateRoot

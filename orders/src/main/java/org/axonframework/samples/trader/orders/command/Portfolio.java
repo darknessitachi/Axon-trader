@@ -33,6 +33,7 @@ import java.util.Map;
 import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 
 /**
+ * 组合
  * Not a lot of checks are available. We will check if you still have item before you reserve them. Other than that
  * we will not do checks. It is possible to give more items than you reserve.
  * <p/>
@@ -155,11 +156,13 @@ public class Portfolio {
         availableItems.put(event.getOrderBookIdentifier(), available + event.getAmountOfCancelledItems());
     }
 
+    // 存款
     @EventHandler
     public void onMoneyAddedToPortfolio(CashDepositedEvent event) {
         amountOfMoney += event.getMoneyAddedInCents();
     }
 
+    // 提款
     @EventHandler
     public void onPaymentMadeFromPortfolio(CashWithdrawnEvent event) {
         amountOfMoney -= event.getAmountPaidInCents();

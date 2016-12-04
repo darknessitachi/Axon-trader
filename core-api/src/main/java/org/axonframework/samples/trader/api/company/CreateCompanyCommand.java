@@ -20,6 +20,7 @@ package org.axonframework.samples.trader.api.company;
 import org.axonframework.samples.trader.api.users.UserId;
 
 /**
+ * 创建公司命令
  * <p>Create a new company by proving the name, the estimated value of the company and the amount of shares that are
  * available for the company. You also must provide the id of the user that wants to create the company.</p>
  *
@@ -29,8 +30,8 @@ public class CreateCompanyCommand {
     private CompanyId companyId;
     private UserId userId;
     private String companyName;
-    private long companyValue;
-    private long amountOfShares;
+    private long companyValue;// 市值
+    private long amountOfShares;// 股数 
 
     public CreateCompanyCommand(CompanyId companyId, UserId userId, String companyName, long companyValue, long amountOfShares) {
         this.companyId = companyId;

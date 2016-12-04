@@ -19,6 +19,7 @@ package org.axonframework.samples.trader.api.portfolio.cash;
 import org.axonframework.samples.trader.api.orders.trades.PortfolioId;
 
 /**
+ * 存款
  * @author Jettro Coenradie
  */
 public class CashDepositedEvent {
